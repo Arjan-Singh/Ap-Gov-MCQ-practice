@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Practice Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background: #007acc;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question h3 {
+            font-size: 1.2em;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #007acc;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005f99;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>MCQ Practice Website</h1>
+    </header>
+    <div class="container">
+        <div class="question" id="question-container">
+            <h3 id="question">Loading question...</h3>
+            <ul class="options" id="options">
+            </ul>
+        </div>
+        <button id="next">Next Question</button>
+        <p id="score" style="margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the main job of the federal bureaucracy?",
+                options: ["Write the law", "Implement the law", "Judge the law", "Abolish the law"],
+                answer: "Implement the law"
+            },
+            {
+                question: "What ended the patronage system for hiring federal bureaucrats and began the merit/civil service system?",
+                options: ["The Pendleton Civil Service Act", "Civil Rights Act", "Freedom of Information Act", "Hatch Act"],
+                answer: "The Pendleton Civil Service Act"
+            },
+            {
+                question: "Name four cabinet departments - also known as agencies.",
+                options: ["Treasury, State, Defense, Justice", "Homeland, Technology, Sports, Culture", "Defense, Education, Housing, Space", "Justice, Environment, Technology, Science"],
+                answer: "Treasury, State, Defense, Justice"
+            },
+            {
+                question: "What is a budget deficit?",
+                options: [
+                    "When revenues exceed expenditures",
+                    "When expenditures exceed revenues",
+                    "When the budget is balanced",
+                    "When taxes are too high"
+                ],
+                answer: "When expenditures exceed revenues"
+            }
+            // Add more questions in this format
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const nextButton = document.getElementById('next');
+        const scoreElement = document.getElementById('score');
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            optionsElement.innerHTML = '';
+
+            currentQuestion.options.forEach(option => {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.addEventListener('click', () => selectAnswer(button, currentQuestion.answer));
+                li.appendChild(button);
+                optionsElement.appendChild(li);
+            });
+        }
+
+        function selectAnswer(button, correctAnswer) {
+            if (button.textContent === correctAnswer) {
+                button.style.backgroundColor = 'green';
+                score++;
+            } else {
+                button.style.backgroundColor = 'red';
+            }
+
+            Array.from(optionsElement.children).forEach(li => {
+                li.firstChild.disabled = true;
+            });
+
+            scoreElement.textContent = `Score: ${score} / ${questions.length}`;
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                questionElement.textContent = "Quiz Completed!";
+                optionsElement.innerHTML = '';
+                nextButton.style.display = 'none';
+            }
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
